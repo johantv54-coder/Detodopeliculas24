@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detodopeliculas — Tu mundo del cine</title>
+  <meta name="description" content="Detodopeliculas: descubre películas, estrenos, clásicos y series en un solo lugar.">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#08090d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Detodopeliculas">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+    :root {
+      --bg: #08090d;
+      --panel: #11131a;
+      --panel-hover: #191c26;
+      --card-bg: #141620;
+      --text: #f5f5f7;
+      --muted: #a6a8b2;
+      --accent: #e50914;
+      --accent2: #ff3b30;
+      --border: #232634;
+      --success: #10b981;
+      --success-hover: #059669;
+      --warning: #f59e0b;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* HEADER & NAV */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 5%;
+      background: rgba(8, 9, 13, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.3s ease;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo span { color: var(--accent); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .navlinks {
+      display: flex;
+      gap: 24px;
+      color: #ccc;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .navlinks a { transition: color 0.2s; }
+    .navlinks a:hover { color: #fff; }
+
+    .btn-admin-nav {
+      background: linear-gradient(135deg, #252836, #1a1c27);
+      border: 1px solid #3c4155;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-admin-nav:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(229, 9, 20, 0.35);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 640px;
+      padding: 160px 5% 90px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(8,9,13,0.98) 0%, rgba(8,9,13,0.85) 45%, rgba(8,9,13,0.2) 100%),
+        linear-gradient(0deg, var(--bg) 0%, transparent 35%),
+        url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1800&q=85') center/cover no-repeat;
+    }
+    .hero-content { max-width: 650px; }
+    .eyebrow {
+      color: var(--accent2);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: clamp(38px, 6vw, 76px);
+      line-height: 0.95;
+      margin: 12px 0 20px;
+      letter-spacing: -2px;
+      font-weight: 900;
+    }
+    .hero p {
+      color: #d1d3dc;
+      font-size: 17px;
+      line-height: 1.6;
+      max-width: 580px;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .primary { background: var(--accent); color: #fff; }
+    .primary:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4); }
+    .secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      margin-left: 10px;
+    }
+    .secondary:hover { background: rgba(255, 255, 255, 0.16); transform: translateY(-2px); }
+
+    .btn.download {
+      background: var(--success);
+      color: #fff;
+    }
+    .btn.download:hover {
+      background: var(--success-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    /* SEARCH BAR */
+    .search-wrapper { padding: 30px 5% 10px; }
+    .search {
+      margin: 0 auto;
+      max-width: 720px;
+      display: flex;
+      background: #141622;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      transition: border-color 0.2s;
+    }
+    .search:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2);
+    }
+    .search input {
+      flex: 1;
+      background: transparent;
+      border: 0;
+      outline: 0;
+      color: white;
+      padding: 16px 20px;
+      font-size: 15px;
+    }
+    .search input::placeholder { color: #767988; }
+    .search button {
+      background: var(--accent);
+      color: white;
+      border: 0;
+      padding: 0 26px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .search button:hover { background: var(--accent2); }
+
+    /* SECTIONS */
+    section { padding: 45px 5%; }
+    .section-title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .section-title h2 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title .badge-count {
+      background: #1e2130;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    /* GRID & CARDS */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 18px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-7px) scale(1.02);
+      border-color: rgba(229, 9, 20, 0.5);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    }
+    .poster {
+      aspect-ratio: 2/3;
+      background-size: cover;
+      background-position: center;
+      background-color: #1b1d28;
+      position: relative;
+    }
+    .poster .play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .poster .play-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.6);
+      transform: scale(0.85);
+      transition: transform 0.2s;
+    }
+    .card:hover .play-overlay { opacity: 1; }
+    .card:hover .play-icon { transform: scale(1); }
+
+    .card-info {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #fff;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .card-badges-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .card-type-tag {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .download-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    /* BANNER */
+    .banner {
+      border-radius: 16px;
+      padding: 40px;
+      background: linear-gradient(110deg, #1b1d29, #0f1118);
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 25px;
+    }
+    .banner h2 { margin: 0 0 8px; font-size: 28px; }
+    .banner p { margin: 0; color: #a2a4b0; font-size: 15px; }
+
+    /* FOOTER */
+    footer {
+      padding: 45px 5%;
+      border-top: 1px solid var(--border);
+      color: #8f919a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    /* MODAL BACKDROP COMMON */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .modal-backdrop.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* DETAIL MODAL */
+    .detail-card {
+      background: #13151f;
+      border: 1px solid #2a2e40;
+      border-radius: 16px;
+      max-width: 780px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      padding: 28px;
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+    }
+    .modal-backdrop.active .detail-card { transform: scale(1); }
+    .detail-poster {
+      width: 260px;
+      flex-shrink: 0;
+      aspect-ratio: 2/3;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .detail-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .detail-close {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .detail-close:hover { background: var(--accent); }
+    .detail-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 0 10px;
+      padding-right: 40px;
+    }
+    .detail-badges {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.08);
+      color: #d1d3dc;
+    }
+    .badge-accent {
+      background: var(--accent);
+      color: white;
+    }
+    .badge-download {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .detail-synopsis {
+      color: #b7b9c6;
+      line-height: 1.65;
+      font-size: 14.5px;
+      margin-bottom: 24px;
+      flex: 1;
+    }
+    .detail-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* AUTH MODAL (PASSWORD) */
+    .auth-card {
+      background: #131520;
+      border: 1px solid #2b2f42;
+      border-radius: 16px;
+      max-width: 420px;
+      width: 100%;
+      padding: 32px 28px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+      position: relative;
+      text-align: center;
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+    }
+    .modal-backdrop.active .auth-card { transform: scale(1); }
+    .auth-icon {
+      font-size: 44px;
+      margin-bottom: 14px;
+    }
+    .auth-card h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .auth-card p {
+      color: #9ea1b2;
+      font-size: 13.5px;
+      margin: 0 0 22px;
+      line-height: 1.5;
+    }
+    .auth-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .toggle-pass-btn {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #8c8f9f;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .auth-error-msg {
+      color: #f87171;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+      font-weight: 600;
+    }
+
+    /* ADMIN PANEL MODAL / DRAWER */
+    .admin-modal {
+      background: #11131c;
+      border: 1px solid #282c3c;
+      border-radius: 16px;
+      max-width: 880px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+    }
+    .admin-header {
+      padding: 18px 24px;
+      background: #171926;
+      border-bottom: 1px solid #262a3b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-header h3 {
+      margin: 0;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 24px 0;
+      background: #141622;
+      border-bottom: 1px solid #262a3b;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #8c8f9f;
+      padding: 10px 16px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active {
+      color: #fff;
+      border-bottom-color: var(--accent);
+    }
+    .admin-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* FORM STYLES */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group.full { grid-column: span 2; }
+    .form-group label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #c4c6d2;
+    }
+    .form-control {
+      background: #171924;
+      border: 1px solid #2b2f42;
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.25);
+    }
+    textarea.form-control { resize: vertical; min-height: 90px; }
+    .poster-preview-box {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: #171924;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px dashed #303548;
+    }
+    .preview-img {
+      width: 55px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #0d0f15;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    /* TABLE IN ADMIN */
+    .admin-table-search {
+      width: 100%;
+      background: #171924;
+      border: 1px solid #2b2f42;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: white;
+      margin-bottom: 16px;
+      font-size: 13.5px;
+    }
+    .table-responsive {
+      max-height: 420px;
+      overflow-y: auto;
+      border: 1px solid #262a3b;
+      border-radius: 8px;
+    }
+    table.admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+    table.admin-table th {
+      background: #171926;
+      padding: 12px 14px;
+      color: #9ea1b2;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    table.admin-table td {
+      padding: 10px 14px;
+      border-top: 1px solid #1f2231;
+      color: #d8d9e2;
+      vertical-align: middle;
+    }
+    table.admin-table tr:hover td { background: #161824; }
+    .table-thumb {
+      width: 40px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 4px;
+      background: #222;
+    }
+    .btn-action {
+      background: transparent;
+      border: 1px solid #363a4e;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-action.edit:hover { background: #3b82f6; border-color: #3b82f6; }
+    .btn-action.del:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* EXPORT BOXES */
+    .export-card {
+      background: #171926;
+      border: 1px solid #2a2e40;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .export-card h4 { margin: 0 0 6px; font-size: 16px; }
+    .export-card p { margin: 0; color: #a1a3b1; font-size: 13px; line-height: 1.4; }
+
+    /* BOTTOM NAV FOR MOBILE (ANDROID/IOS) */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(14, 16, 24, 0.96);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+      z-index: 99;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .b-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #8f92a1;
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+    .b-item:hover, .b-item.active { color: #fff; }
+    .b-item.active .b-icon { transform: scale(1.1); }
+    .b-icon { font-size: 19px; line-height: 1; }
+
+    @media (max-width: 768px) {
+      .bottom-nav { display: flex; }
+      body { padding-bottom: 75px; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1080px) {
+      .grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .detail-card {
+        flex-direction: column;
+        padding: 20px;
+        align-items: center;
+      }
+      .detail-poster {
+        width: 180px;
+      }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: span 1; }
+      .export-card { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 650px) {
+      .navlinks {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #0e1018;
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 20px;
+        gap: 16px;
+      }
+      .navlinks.open { display: flex; }
+      .menu-toggle { display: block; }
+      .hero { min-height: 560px; padding-top: 120px; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      section { padding: 35px 4%; }
+      .banner { flex-direction: column; text-align: center; }
+      h1 { letter-spacing: -1px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <header class="nav">
+    <a class="logo" href="#inicio">🎬 Detodo<span>peliculas</span></a>
+    <div class="nav-actions">
+      <nav class="navlinks" id="navlinks">
+        <a href="#inicio" onclick="closeNav()">Inicio</a>
+        <a href="#peliculas" onclick="closeNav()">Películas</a>
+        <a href="#estrenos" onclick="closeNav()">Estrenos</a>
+        <a href="#series" onclick="closeNav()">Series</a>
+      </nav>
+      <button id="btnInstallApp" class="btn-admin-nav" style="display:none; background:#10b981; border-color:#10b981;" onclick="installPWA()">
+        📲 Instalar App
+      </button>
+      <button class="btn-admin-nav" onclick="openAdminModal()">
+        🔐 Administrar
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" onclick="toggleNav()">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="inicio">
+      <div class="hero-content">
+        <div class="eyebrow">Bienvenido a Detodopeliculas</div>
+        <h1>El cine que quieres, en un solo lugar.</h1>
+        <p>Explora películas populares, grandes estrenos, clásicos y series. Descubre nuevas historias y encuentra rápidamente tu próximo entretenimiento.</p>
+        <a class="btn primary" href="#peliculas">🎬 Explorar películas</a>
+        <a class="btn secondary" href="#estrenos">🔥 Ver estrenos</a>
+      </div>
+    </section>
+
+    <!-- BUSCADOR -->
+    <section class="search-wrapper">
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="Buscar por título de película o serie...">
+        <button onclick="ejecutarBusqueda()">🔍 Buscar</button>
+      </div>
+    </section>
+
+    <!-- SECCIÓN PELÍCULAS -->
+    <section id="peliculas">
+      <div class="section-title">
+        <h2>🎬 Películas destacadas <span class="badge-count" id="countMovies">0</span></h2>
+      </div>
+      <div class="grid" id="gridMovies"></div>
+    </section>
+
+    <!-- BANNER ESTRENOS -->
+    <section id="estrenos">
+      <div class="banner">
+        <div>
+          <h2>🎞️ Los grandes estrenos</h2>
+          <p>Mantente al día con las novedades cinematográficas y descubre lo que todos están viendo.</p>
+        </div>
+        <a class="btn primary" href="#peliculas">Explorar ahora</a>
+      </div>
+    </section>
+
+    <!-- SECCIÓN SERIES -->
+    <section id="series">
+      <div class="section-title">
+        <h2>📺 Series populares <span class="badge-count" id="countSeries">0</span></h2>
+      </div>
+      <div class="grid" id="gridSeries"></div>
+    </section>
+  </main>
+
+  <!-- BARRA DE NAVEGACIÓN MÓVIL ESTILO APP ANDROID -->
+  <nav class="bottom-nav">
+    <a href="#inicio" class="b-item active"><span class="b-icon">🏠</span><span>Inicio</span></a>
+    <a href="#peliculas" class="b-item"><span class="b-icon">🎬</span><span>Películas</span></a>
+    <a href="#series" class="b-item"><span class="b-icon">📺</span><span>Series</span></a>
+    <a href="#searchInput" class="b-item" onclick="setTimeout(()=>document.getElementById('searchInput').focus(),100)"><span class="b-icon">🔍</span><span>Buscar</span></a>
+    <button class="b-item" onclick="openAdminModal()"><span class="b-icon">🔐</span><span>Admin</span></button>
+  </nav>
+
+  <!-- PIE DE PÁGINA -->
+  <footer>
+    <div>
+      <strong style="color:#fff">Detodopeliculas</strong><br>
+      Tu mundo del cine, en un solo lugar.
+    </div>
+    <div>© 2026 Detodopeliculas — Todos los derechos reservados</div>
+  </footer>
+
+  <!-- MODAL DE DETALLE (VISITANTES) -->
+  <div class="modal-backdrop" id="detailModal" onclick="handleDetailBackdropClick(event)">
+    <div class="detail-card">
+      <button class="detail-close" style="position:absolute; top:18px; right:18px;" onclick="closeDetailModal()" aria-label="Cerrar">✕</button>
+      <div class="detail-poster" id="detailPoster"></div>
+      <div class="detail-body">
+        <h2 class="detail-title" id="detailTitle"></h2>
+        <div class="detail-badges">
+          <span class="badge badge-accent" id="detailType"></span>
+          <span class="badge" id="detailYear"></span>
+          <span class="badge badge-download" id="detailDownloadBadge" style="display:none;">📥 Descargable</span>
+        </div>
+        <div class="detail-synopsis" id="detailSynopsis"></div>
+        <div class="detail-actions">
+          <a id="detailTrailerBtn" class="btn primary" href="#" target="_blank" rel="noopener">▶ Ver Tráiler</a>
+          <a id="detailDownloadBtn" class="btn download" href="#" target="_blank" rel="noopener">📥 Descargar</a>
+          <button class="btn secondary" onclick="closeDetailModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE AUTENTICACIÓN (CONTRASEÑA DE ADMINISTRADOR) -->
+  <div class="modal-backdrop" id="authModal" onclick="handleAuthBackdropClick(event)">
+    <div class="auth-card">
+      <button class="detail-close" style="position:absolute; top:16px; right:16px;" onclick="closeAuthModal()" aria-label="Cerrar">✕</button>
+      <div class="auth-icon">🔐</div>
+      <h3>Panel de Administración</h3>
+      <p>Ingresa la contraseña para subir, editar contenido o administrar el catálogo.</p>
+      <form onsubmit="handleAuthSubmit(event)">
+        <div class="auth-input-wrap">
+          <input type="password" id="adminPassInput" class="form-control" placeholder="Contraseña de administrador" required autofocus autocomplete="current-password">
+          <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility('adminPassInput')" title="Mostrar/ocultar contraseña">👁️</button>
+        </div>
+        <div id="authErrorMsg" class="auth-error-msg">
+          ❌ Contraseña incorrecta. Inténtalo de nuevo.
+        </div>
+        <button type="submit" class="btn primary" style="width:100%; justify-content:center; margin-top:16px;">
+          Ingresar al Panel
+        </button>
+        <div style="font-size:12px; color:#7d8090; margin-top:16px; line-height: 1.4;">
+          Contraseña inicial: <code style="color:#fff; background:#1b1d28; padding:2px 7px; border-radius:4px; font-weight:700;">admin123</code><br>
+          <span style="font-size:11px; color:#5d6070;">(Puedes cambiarla dentro del panel de administración)</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE ADMINISTRACIÓN (SUBIR, EDITAR Y EXPORTAR) -->
+  <div class="modal-backdrop" id="adminModal" onclick="handleAdminBackdropClick(event)">
+    <div class="admin-modal">
+      <div class="admin-header">
+        <h3>⚙️ Herramienta de Administración</h3>
+        <div class="admin-header-actions">
+          <button class="btn-action del" onclick="logoutAdmin()" title="Cerrar sesión de administrador">🔒 Cerrar Sesión</button>
+          <button class="detail-close" onclick="closeAdminModal()" aria-label="Cerrar">✕</button>
+        </div>
+      </div>
+      <div class="admin-tabs">
+        <button class="tab-btn active" id="tabBtnForm" onclick="switchAdminTab('form')">➕ Subir / Editar</button>
+        <button class="tab-btn" id="tabBtnList" onclick="switchAdminTab('list')">📋 Administrar Catálogo</button>
+        <button class="tab-btn" id="tabBtnExport" onclick="switchAdminTab('export')">💾 Guardar para Netlify</button>
+      </div>
+      <div class="admin-body">
+        <!-- TAB 1: FORMULARIO -->
+        <div class="tab-content active" id="tabForm">
+          <form id="itemForm" onsubmit="handleFormSubmit(event)">
+            <input type="hidden" id="formItemId" value="">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="formType">Tipo de Contenido *</label>
+                <select id="formType" class="form-control" required>
+                  <option value="movie">Película</option>
+                  <option value="series">Serie</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="formYear">Año o Duración / Temporadas *</label>
+                <input type="text" id="formYear" class="form-control" placeholder="Ej: 2024 o 4 Temporadas" required>
+              </div>
+              <div class="form-group full">
+                <label for="formTitle">Título *</label>
+                <input type="text" id="formTitle" class="form-control" placeholder="Ej: Dune: Part Two" required>
+              </div>
+              <div class="form-group full">
+                <label for="formPoster">URL de Imagen de Póster *</label>
+                <input type="url" id="formPoster" class="form-control" placeholder="https://..." oninput="updatePosterPreview()" required>
+                <div class="poster-preview-box">
+                  <img id="posterPreviewImg" class="preview-img" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='150' fill='%23333'><rect width='100%' height='100%'/></svg>" alt="Vista previa">
+                  <span style="font-size:12px; color:#888" id="previewText">Ingresa una URL válida para ver la vista previa del póster.</span>
+                </div>
+              </div>
+              <div class="form-group full">
+                <label for="formSynopsis">Sinopsis / Descripción</label>
+                <textarea id="formSynopsis" class="form-control" placeholder="Escribe un breve resumen de la trama..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="formTrailer">Enlace de Tráiler o Video (YouTube)</label>
+                <input type="url" id="formTrailer" class="form-control" placeholder="Ej: https://www.youtube.com/watch?v=...">
+              </div>
+              <div class="form-group">
+                <label for="formDownload">Enlace de Descarga (Mega, Drive, Torrent, Mediafire, etc.)</label>
+                <input type="url" id="formDownload" class="form-control" placeholder="Ej: https://mega.nz/file/... o enlace de descarga">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn secondary" id="btnCancelEdit" style="display:none;" onclick="cancelEditing()">Cancelar Edición</button>
+              <button type="submit" class="btn primary" id="btnSubmitForm">Guardar en el Catálogo</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- TAB 2: LISTADO Y EDICIÓN -->
+        <div class="tab-content" id="tabList">
+          <input type="text" id="adminTableSearch" class="admin-table-search" placeholder="Filtrar por título..." oninput="filterAdminTable()">
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Póster</th>
+                  <th>Título</th>
+                  <th>Tipo</th>
+                  <th>Año / Info</th>
+                  <th>Descarga</th>
+                  <th style="text-align:right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody">
+                <!-- Se llena dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3: EXPORTAR Y SEGURIDAD -->
+        <div class="tab-content" id="tabExport">
+          <div class="export-card">
+            <div>
+              <h4 style="color: #4ade80;">🚀 Publicar cambios en Netlify</h4>
+              <p>Descarga el archivo <strong>index.html</strong> que ya incluye todas tus películas, series, enlaces de descarga y tu contraseña de administrador guardados en el código. Al subirlo a tu Netlify, los cambios quedarán permanentes.</p>
+            </div>
+            <button class="btn primary" onclick="downloadUpdatedHTML()">⬇️ Descargar index.html</button>
+          </div>
+
+          <div class="export-card">
+            <div>
+              <h4>🔑 Cambiar Contraseña de Administrador</h4>
+              <p>Modifica la clave de acceso requerida para subir y editar contenido en este panel.</p>
+            </div>
+            <button class="btn secondary" onclick="changeAdminPasswordPrompt()">Cambiar Contraseña</button>
+          </div>
+
+          <div class="export-card">
+            <div>
+              <h4>📦 Respaldar catálogo (JSON)</h4>
+              <p>Guarda una copia de seguridad en formato JSON de todas las películas y series actuales con sus enlaces de descarga.</p>
+            </div>
+            <button class="btn secondary" onclick="exportDataJSON()">Exportar JSON</button>
+          </div>
+
+          <div class="export-card">
+            <div>
+              <h4>📥 Restaurar o importar catálogo</h4>
+              <p>Carga un archivo de respaldo JSON generado previamente.</p>
+            </div>
+            <div>
+              <input type="file" id="importJsonInput" accept=".json" style="display:none" onchange="importDataJSON(event)">
+              <button class="btn secondary" onclick="document.getElementById('importJsonInput').click()">Importar JSON</button>
+            </div>
+          </div>
+
+          <div class="export-card" style="border-color: rgba(229, 9, 20, 0.4);">
+            <div>
+              <h4 style="color: #f87171;">⚠️ Restaurar catálogo de fábrica</h4>
+              <p>Restablece las películas y series originales por defecto.</p>
+            </div>
+            <button class="btn secondary" style="border-color:#f87171; color:#f87171;" onclick="resetToFactoryDefaults()">Restaurar Todo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT CON DATOS Y LÓGICA -->
+  <script>
+    /* ============================================================
+       SEGURIDAD Y CONTRASEÑA DE ADMINISTRADOR
+       ============================================================ */
+    const PASS_STORAGE_KEY = "detodopeliculas_admin_pass_v1";
+    let DEFAULT_ADMIN_PASS = "admin123";
+    let isAdminAuthenticated = false;
+
+    function getAdminPassword() {
+      return localStorage.getItem(PASS_STORAGE_KEY) || DEFAULT_ADMIN_PASS;
+    }
+
+    function setAdminPassword(newPass) {
+      localStorage.setItem(PASS_STORAGE_KEY, newPass);
+      DEFAULT_ADMIN_PASS = newPass;
+    }
+
+    function togglePassVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function openAdminModal() {
+      if (isAdminAuthenticated) {
+        document.getElementById("adminModal").classList.add("active");
+        renderAdminTable();
+      } else {
+        openAuthModal();
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById("adminPassInput").value = "";
+      document.getElementById("authErrorMsg").style.display = "none";
+      document.getElementById("authModal").classList.add("active");
+      setTimeout(() => document.getElementById("adminPassInput").focus(), 100);
+    }
+
+    function closeAuthModal() {
+      document.getElementById("authModal").classList.remove("active");
+    }
+
+    function handleAuthBackdropClick(e) {
+      if (e.target.id === "authModal") closeAuthModal();
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const enteredPass = document.getElementById("adminPassInput").value;
+      const actualPass = getAdminPassword();
+
+      if (enteredPass === actualPass) {
+        isAdminAuthenticated = true;
+        closeAuthModal();
+        document.getElementById("adminModal").classList.add("active");
+        renderAdminTable();
+      } else {
+        document.getElementById("authErrorMsg").style.display = "block";
+        document.getElementById("adminPassInput").select();
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminAuthenticated = false;
+      closeAdminModal();
+      alert("🔒 Sesión de administrador cerrada.");
+    }
+
+    function changeAdminPasswordPrompt() {
+      const currentPass = prompt("Ingresa tu contraseña actual de administrador:");
+      if (currentPass === null) return;
+
+      if (currentPass !== getAdminPassword()) {
+        alert("❌ La contraseña actual no es correcta.");
+        return;
+      }
+
+      const newPass = prompt("Ingresa la NUEVA contraseña de administrador (mínimo 4 caracteres):");
+      if (newPass === null) return;
+      if (newPass.trim().length < 4) {
+        alert("⚠️ La contraseña debe tener al menos 4 caracteres.");
+        return;
+      }
+
+      const confirmPass = prompt("Confirma la NUEVA contraseña:");
+      if (confirmPass !== newPass) {
+        alert("❌ Las contraseñas no coinciden.");
+        return;
+      }
+
+      setAdminPassword(newPass.trim());
+      alert("✅ ¡Contraseña cambiada con éxito! Recuerda pulsar 'Descargar index.html' para que la nueva contraseña quede protegida también en Netlify.");
+    }
+
+    /* ============================================================
+       CATÁLOGO PREDETERMINADO (INICIAL)
+       ============================================================ */
+    const DEFAULT_CATALOG = [
+  {
+    "id": "wp_1",
+    "type": "movie",
+    "title": "Una Mujer sin Pasado",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/una_mujer_sin_pasado-392735508-large.jpg?w=819",
+    "synopsis": "Tras descubrir que tiene familia y un imperio naviero, una mujer con amnesia vuelve a su pasado acomodado y aparentemente perfecto para entender por qué lo abandonó.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1jZlBMkTijDukgUY9yfXrrg"
+  },
+  {
+    "id": "wp_2",
+    "type": "movie",
+    "title": "Letras Robadas (Power Ballad)",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/power_ballad-515930050-large.jpg?w=691",
+    "synopsis": "Una cantante de bodas se ve envuelta en una historia con una estrella del rock a través de la canción que se convierte en una conexión entre ellas. Con Keith McErlean, Nick Jonas y Paul Reid.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1-LIHjfYiKqb0bHmKLgVjJA"
+  },
+  {
+    "id": "wp_3",
+    "type": "movie",
+    "title": "Bajo tus pies",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/bajo_tus_pies-206557240-large.jpg?w=717",
+    "synopsis": "Isabel se muda con sus dos hijos a un edificio prestigioso de alquiler asequible. Al instalarse, tres vecinas ancianas del piso inferior alteran la rutina familiar, generando una atmósfera claustrofóbica y de creciente inquietud.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1ufPnc3srBXqcRnRz79j-FA"
+  },
+  {
+    "id": "wp_4",
+    "type": "movie",
+    "title": "Zona cero (Colony)",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bnzi5ywvingutngrimy00othhlwiwogutzjkyzdk2njliody2xkeyxk.jpg?w=691",
+    "synopsis": "En una conferencia de biotecnología, un virus de mutación rápida se desata y el recinto queda sellado. Los infectados evolucionan en formas impredecibles, y un grupo de sobrevivientes debe abrirse paso contra reloj.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1B6ygSFOBuyrrARPqxPYW1g"
+  },
+  {
+    "id": "wp_5",
+    "type": "movie",
+    "title": "Personas Comunes",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/images-63.jpg?w=387",
+    "synopsis": "Gi Cheol, un profesor de gimnasia, se siente raro porque una alumna ha desaparecido, pero a nadie en el pueblo parece importarle. Sólo Yoo Jin, amiga de la chica desaparecida, está segura de que su amiga ha sido secuestrada.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1KIGAEatSO3tGMu8rTeg94g"
+  },
+  {
+    "id": "wp_6",
+    "type": "movie",
+    "title": "Turning Point: Generation 9/11",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bywy0ody4mtutyjlhzs00yzu2lwiwytmtmjgwzgm2mdviotbhxkeyxk.jpg?w=822",
+    "synopsis": "Examina, a veinticinco años del 11-S, cómo el atentado marcó a una generación: niños que perdieron a sus padres, periodistas que cubrieron la guerra contra el terrorismo y jóvenes cuyas vidas cambiaron.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1BCHUWKkQbf-mQ59cclaOeg"
+  },
+  {
+    "id": "wp_7",
+    "type": "movie",
+    "title": "Solo por una noche",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bm2zlytq2ymutztnlny00ogi0lwfmnjctn2mynjyznjaznjlixkeyxk.jpg?w=693",
+    "synopsis": "Dos desconocidos, ávidos de amor, se topan por casualidad en la única noche del año en que las personas solteras tienen permitido tener relaciones sexuales.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1rm1jJDtc6gtgh3RzMzRr-w"
+  },
+  {
+    "id": "wp_8",
+    "type": "movie",
+    "title": "LEGO Star Wars: The Mandalorian",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/images-59.jpg?w=399",
+    "synopsis": "La historia sigue al cazarrecompensas y al Niño mientras se reencuentran en una nueva misión, combinando humor y la épica del universo Star Wars en formato LEGO.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1s4iL04uYjJb0yoiRZRDzhQ"
+  },
+  {
+    "id": "wp_9",
+    "type": "movie",
+    "title": "Batman: Knightfall Part 1",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bnty3ywizyzytzdk2my00yjfjlwe2otctnwvhotu3zdq2ytu0xkeyxk.jpg?w=683",
+    "synopsis": "El Cruzado Encapuchado enfrenta su mayor prueba cuando Bane libera a la galería completa de villanos del Manicomio de Arkham, empujándolo al límite de su resistencia física y mental.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/15PfCIB7VE9iax1m0jAa5oQ"
+  },
+  {
+    "id": "wp_10",
+    "type": "movie",
+    "title": "Coyote vs. Acme",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/coyote_vs_acme-412710181-large.jpg?w=768",
+    "synopsis": "Wile E. Coyote, tras repetidos fracasos con los productos Acme, contrata a un abogado especializado en vallas publicitarias para demandar a la corporación en un hilarante juicio.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1TL-VudGYii11WIOgwVRctg"
+  },
+  {
+    "id": "wp_11",
+    "type": "movie",
+    "title": "The Whisper Man (Susurran tu Nombre)",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5boti1ymy3ytqtytg2zi00otzkltk3nzqtnjcxnzizmjk2odzlxkeyxk.jpg?w=691",
+    "synopsis": "En Chicago de los años 60, una operación encubierta del FBI busca sabotear el movimiento por los derechos civiles, inspirándose en un programa real de espionaje contra activistas.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1qpy4L2_a7DoReNEyfdF0rQ"
+  },
+  {
+    "id": "wp_12",
+    "type": "movie",
+    "title": "Frankenstein: Legacy",
+    "year": "2025",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/images-70.jpg?w=388",
+    "synopsis": "Ambientada en la Inglaterra de 1875, los personajes deben enfrentar sus propios demonios en una adaptación cargada de terror inspirada en la clásica novela de Mary Shelley.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1n6o7r1rCzMytV8LF_dDJnw"
+  },
+  {
+    "id": "wp_13",
+    "type": "movie",
+    "title": "Aves de Corral",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/aves_de_corral-884039058-large.jpg?w=695",
+    "synopsis": "Película española que combina comedia, crimen y drama. Varios personajes se entrelazan en enredos hilarantes y tensos, mostrando el lado oscuro y cómico de la vida cotidiana.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1b6lw-qfhh8k279P1sjV4Sg"
+  },
+  {
+    "id": "wp_14",
+    "type": "movie",
+    "title": "Barreda",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bmgm2ymm1nmqtzjlkos00yjlkltllmtctyjvimzi4n2m5nzfhxkeyxk.jpg?w=190",
+    "synopsis": "Retrata la escalofriante historia de Ricardo Barreda, el dentista argentino que en 1992 asesinó a su familia y se presentó como víctima, desatando una tormenta mediática en el país.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1srzOusAqx2CWlVxZgbIYCw"
+  },
+  {
+    "id": "wp_15",
+    "type": "movie",
+    "title": "The Brink of War",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bytbkodu5ymetztgzyy00ztc3lwi1ogytnzvkzjnhzdyzmdmxxkeyxk.jpg?w=655",
+    "synopsis": "Se centra en la cumbre histórica de 1986 entre Ronald Reagan y Mijaíl Gorbachov en Islandia, un momento crítico de la Guerra Fría que puso a prueba la diplomacia nuclear global.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1BtMOJWLUuH4lVSlQIX9tkA"
+  },
+  {
+    "id": "wp_16",
+    "type": "movie",
+    "title": "Carrera contra el tiempo (The Runner)",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/images-60.jpg?w=374",
+    "synopsis": "Maia Marten, una abogada londinense, recibe una llamada: su hijo ha sido secuestrado. Obligada a correr sin descanso y obedecer órdenes implacables, debe enfrentar una red de amenazas sin confiar en nadie.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1-UeiTj-4jpVnAvFevofPEA"
+  },
+  {
+    "id": "wp_17",
+    "type": "movie",
+    "title": "Penelope 2",
+    "year": "2025",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/poster.jpg?w=683",
+    "synopsis": "Víctor se cruza con Penélope, una enfermera que oculta su faceta de viuda negra. Lucas, su compañero nocturno, lucha entre la adicción y un amor imposible en una atmósfera tensa y ambigua.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1EXBuqoxND33RknosBkpd2g"
+  },
+  {
+    "id": "wp_18",
+    "type": "movie",
+    "title": "Mayday",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bm2vmywezm2utodnjzi00ytk1lwezzjetnzy4ogu0ytdknmjmxkeyxk.jpg?w=683",
+    "synopsis": "Un piloto naval estadounidense queda atrapado tras líneas enemigas en una misión secreta. Para sobrevivir, deberá aliarse con un excéntrico exagente de la KGB, combinando tensión y acción.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1EXBuqoxND33RknosBkpd2g"
+  },
+  {
+    "id": "wp_19",
+    "type": "movie",
+    "title": "Hope",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/hope-628246578-large.jpg?w=691",
+    "synopsis": "Los habitantes de una remota ciudad portuaria realizan un hallazgo misterioso, desencadenando una intensa lucha por la supervivencia en un entorno hostil y lleno de incógnitas.",
+    "trailer": "",
+    "download": "https://terabox.com/s/18F3SVWB4mQPBaR_mW4AL8A"
+  },
+  {
+    "id": "wp_20",
+    "type": "movie",
+    "title": "Moscas",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/images-69-1.jpg?w=452",
+    "synopsis": "Olga, una mujer de rutina estricta en un gran edificio de departamentos, alquila por apuros financieros una habitación a un hombre que lleva en secreto a su hijo, creando un vínculo inesperado.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1P2gi6mxjgoClezLPVQSMVw"
+  },
+  {
+    "id": "wp_21",
+    "type": "movie",
+    "title": "La Ladrona del Tiempo",
+    "year": "2025",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/la_ladrona_del_tiempo-201763912-large.jpg?w=691",
+    "synopsis": "Qianxiao, una joven pescadora que llega a la gran metrópolis, es elegida por la misteriosa Rueda del Tiempo, obteniendo el poder de manipular el tiempo en un viaje fantástico.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/12uUmTC_Qf1LHRfNzxWA5zA"
+  },
+  {
+    "id": "wp_22",
+    "type": "movie",
+    "title": "Entrega al límite (Runner)",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/images-68.jpg?w=335",
+    "synopsis": "Frank, un mensajero que debe entregar un órgano vital, se ve envuelto en una frenética carrera contra el tiempo cuando un peligroso jefe criminal persigue el envío.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1cvVMzZSwJDMwD4PYSt6iOw"
+  },
+  {
+    "id": "wp_23",
+    "type": "movie",
+    "title": "Hasta el fin del mundo",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bodk2yzhhnjatzwqznc00mzvmltk2nzqtmdzimzblzdhknte1xkeyxk.jpg?w=717",
+    "synopsis": "Manuel recibe una inesperada llamada de su amor perdido hace quince años a punto de casarse. Al reencontrarse, descubre que su vínculo trasciende el tiempo y las decisiones pasadas.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1kgZgsVMgxXG90cTQQMD04Q"
+  },
+  {
+    "id": "wp_24",
+    "type": "series",
+    "title": "Operativo: Lioness",
+    "year": "2 Temporadas",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/operaciones_especiales_lioness_serie_de_tv-655357732-large.jpg?w=600",
+    "synopsis": "Joe, una oficial de la CIA encargada del programa encubierto Lioness, entrena y lidera a una recluta femenina de operaciones especiales para infiltrarse en peligrosas redes criminales.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/10hppy6aHrWB0BGybxoZMug"
+  },
+  {
+    "id": "wp_25",
+    "type": "series",
+    "title": "Linternas (Lanterns)",
+    "year": "1 Temporada",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/lanterns-723320007-large.jpg?w=691",
+    "synopsis": "John Stewart y Hal Jordan, dos policías intergalácticos, investigan un asesinato con implicaciones globales en el corazón de Estados Unidos mientras descubren un oscuro misterio cósmico.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1kuXuUR9xR_XjpoIOj1tKpQ"
+  },
+  {
+    "id": "wp_26",
+    "type": "movie",
+    "title": "La guerra de los últimos (The Dog Stars)",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/images-37b66de7.jpeg?w=399",
+    "synopsis": "Tras una pandemia devastadora, un hombre vive aislado en un hangar con su perro y un viejo avión Cessna. Una misteriosa transmisión por radio lo impulsa a emprender un peligroso viaje.",
+    "trailer": "",
+    "download": "https://terabox.com/s/1JnlmjjUn6eDNhI9srHexhw"
+  },
+  {
+    "id": "wp_27",
+    "type": "movie",
+    "title": "Killer Whale",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bmtdmowqwzjgtmzuxmi00zmnmlwe3ntgtzgq1nddlodc1m2jjxkeyxkfqcgc40._v1_.jpg?w=691",
+    "synopsis": "Dos amigas quedan atrapadas en una laguna desierta sin comunicación. Pronto descubren que una orca altamente letal las acecha estratégicamente en una angustiosa lucha de supervivencia.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1zw4u2zIC9vA9Cs8amvsdrg"
+  },
+  {
+    "id": "wp_28",
+    "type": "movie",
+    "title": "Vértigo 2: Punto muerto (Fall 2)",
+    "year": "2026",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/2026-09-03-09f00ed1-4634-48c6-bc71-85d55196634a.jpg?w=700",
+    "synopsis": "Un grupo de jóvenes se encuentra atrapado en un risco vertical a cientos de metros de altura en Tailandia. Sin posibilidad de rescate, deberán sobreponerse al pánico para no caer al vacío.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1kxJTstIterLy34ibUxcvFA"
+  },
+  {
+    "id": "wp_29",
+    "type": "movie",
+    "title": "Érase una vez en un Ring",
+    "year": "2025",
+    "poster": "https://detodopeliculas4.wordpress.com/wp-content/uploads/2026/09/mv5bzwi4zjgzzjctytnizs00ymuxltgynzktngexzthhnwq0nzgxxkeyxkfqcgc40._v1_fmjpg_ux1000_.jpg?w=683",
+    "synopsis": "Con Blue Demon Jr., sigue a Black Angel en el vibrante y crudo universo de la lucha libre mexicana, revelando testimonios reales y la pasión detrás de las máscaras.",
+    "trailer": "",
+    "download": "https://1024terabox.com/s/1NETLURsgvtl9uzTdv6mYnA"
+  }
+];
+
+    /* ============================================================
+       ADMINISTRACIÓN DE ESTADO Y ALMACENAMIENTO (LOCALSTORAGE)
+       ============================================================ */
+    const STORAGE_KEY = "detodopeliculas_catalog_v5_wp";
+
+    function loadCatalog() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length >= DEFAULT_CATALOG.length) return parsed;
+        }
+      } catch (e) {
+        console.warn("No se pudo leer localStorage:", e);
+      }
+      return [...DEFAULT_CATALOG];
+    }
+
+    function saveCatalog(catalog) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
+      } catch (e) {
+        console.error("Error al guardar en localStorage:", e);
+      }
+    }
+
+    let catalog = loadCatalog();
+
+    /* ============================================================
+       RENDERIZADO DE SECCIONES (PELÍCULAS Y SERIES)
+       ============================================================ */
+    function renderGrids(itemsToRender = null) {
+      const items = itemsToRender || catalog;
+      const movies = items.filter(x => x.type === "movie");
+      const series = items.filter(x => x.type === "series");
+
+      document.getElementById("countMovies").textContent = movies.length;
+      document.getElementById("countSeries").textContent = series.length;
+
+      const gridMovies = document.getElementById("gridMovies");
+      const gridSeries = document.getElementById("gridSeries");
+
+      if (movies.length === 0) {
+        gridMovies.innerHTML = `<p style="grid-column: 1/-1; color: var(--muted); text-align: center; padding: 30px;">No hay películas disponibles con este criterio.</p>`;
+      } else {
+        gridMovies.innerHTML = movies.map(item => createCardHTML(item)).join("");
+      }
+
+      if (series.length === 0) {
+        gridSeries.innerHTML = `<p style="grid-column: 1/-1; color: var(--muted); text-align: center; padding: 30px;">No hay series disponibles con este criterio.</p>`;
+      } else {
+        gridSeries.innerHTML = series.map(item => createCardHTML(item)).join("");
+      }
+    }
+
+    function createCardHTML(item) {
+      const escapedTitle = escapeHtml(item.title);
+      const isMovie = item.type === "movie";
+      const hasDownload = item.download && item.download.trim();
+      return `
+        <article class="card" onclick="openDetailModal('${item.id}')" title="Ver detalles de ${escapedTitle}">
+          <div class="poster" style="background-image: url('${encodeURI(item.poster)}')">
+            <div class="play-overlay">
+              <div class="play-icon">▶</div>
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">${escapedTitle}</div>
+            <div class="card-meta">
+              <span>${escapeHtml(item.year || "")}</span>
+              <div class="card-badges-wrapper">
+                ${hasDownload ? '<span class="download-badge">📥 Descarga</span>' : ''}
+                <span class="card-type-tag">${isMovie ? "Película" : "Serie"}</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    /* ============================================================
+       BUSCADOR
+       ============================================================ */
+    function ejecutarBusqueda() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      if (!q) {
+        renderGrids();
+        return;
+      }
+      const filtered = catalog.filter(item => {
+        const titleMatch = item.title && item.title.toLowerCase().includes(q);
+        const synopsisMatch = item.synopsis && item.synopsis.toLowerCase().includes(q);
+        const yearMatch = item.year && item.year.toLowerCase().includes(q);
+        return titleMatch || synopsisMatch || yearMatch;
+      });
+      renderGrids(filtered);
+      document.getElementById("peliculas").scrollIntoView({ behavior: "smooth" });
+    }
+
+    document.getElementById("searchInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") ejecutarBusqueda();
+    });
+    document.getElementById("searchInput").addEventListener("input", e => {
+      if (!e.target.value) renderGrids();
+    });
+
+    /* ============================================================
+       MODAL DE DETALLE (VISITANTE)
+       ============================================================ */
+    function openDetailModal(id) {
+      const item = catalog.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById("detailTitle").textContent = item.title;
+      document.getElementById("detailPoster").style.backgroundImage = `url('${encodeURI(item.poster)}')`;
+      document.getElementById("detailType").textContent = item.type === "movie" ? "Película" : "Serie";
+      document.getElementById("detailYear").textContent = item.year;
+      document.getElementById("detailSynopsis").textContent = item.synopsis || "Sin sinopsis disponible.";
+
+      // Botón de Tráiler
+      const trailerBtn = document.getElementById("detailTrailerBtn");
+      if (item.trailer && item.trailer.trim()) {
+        trailerBtn.style.display = "inline-flex";
+        trailerBtn.href = item.trailer;
+      } else {
+        trailerBtn.style.display = "none";
+      }
+
+      // Botón de Descarga
+      const downloadBtn = document.getElementById("detailDownloadBtn");
+      const downloadBadge = document.getElementById("detailDownloadBadge");
+      if (item.download && item.download.trim()) {
+        downloadBtn.style.display = "inline-flex";
+        downloadBtn.href = item.download;
+        downloadBadge.style.display = "inline-block";
+      } else {
+        downloadBtn.style.display = "none";
+        downloadBadge.style.display = "none";
+      }
+
+      const modal = document.getElementById("detailModal");
+      modal.classList.add("active");
+    }
+
+    function closeDetailModal() {
+      document.getElementById("detailModal").classList.remove("active");
+    }
+
+    function handleDetailBackdropClick(e) {
+      if (e.target.id === "detailModal") closeDetailModal();
+    }
+
+    /* ============================================================
+       HERRAMIENTA DE ADMINISTRACIÓN (ADMIN MODAL)
+       ============================================================ */
+    function closeAdminModal() {
+      document.getElementById("adminModal").classList.remove("active");
+      cancelEditing();
+    }
+
+    function handleAdminBackdropClick(e) {
+      if (e.target.id === "adminModal") closeAdminModal();
+    }
+
+    function switchAdminTab(tabName) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+      if (tabName === "form") {
+        document.getElementById("tabBtnForm").classList.add("active");
+        document.getElementById("tabForm").classList.add("active");
+      } else if (tabName === "list") {
+        document.getElementById("tabBtnList").classList.add("active");
+        document.getElementById("tabList").classList.add("active");
+        renderAdminTable();
+      } else if (tabName === "export") {
+        document.getElementById("tabBtnExport").classList.add("active");
+        document.getElementById("tabExport").classList.add("active");
+      }
+    }
+
+    function updatePosterPreview() {
+      const url = document.getElementById("formPoster").value.trim();
+      const img = document.getElementById("posterPreviewImg");
+      const text = document.getElementById("previewText");
+      if (url) {
+        img.src = url;
+        img.onerror = () => {
+          text.textContent = "⚠️ No se pudo cargar la imagen. Revisa la URL.";
+        };
+        img.onload = () => {
+          text.textContent = "Vista previa cargada correctamente.";
+        };
+      } else {
+        img.src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='150' fill='%23333'><rect width='100%' height='100%'/></svg>";
+        text.textContent = "Ingresa una URL válida para ver la vista previa del póster.";
+      }
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById("formItemId").value;
+      const type = document.getElementById("formType").value;
+      const title = document.getElementById("formTitle").value.trim();
+      const year = document.getElementById("formYear").value.trim();
+      const poster = document.getElementById("formPoster").value.trim();
+      const synopsis = document.getElementById("formSynopsis").value.trim();
+      const trailer = document.getElementById("formTrailer").value.trim();
+      const download = document.getElementById("formDownload").value.trim();
+
+      if (!title || !poster) {
+        alert("Por favor completa el título y la URL del póster.");
+        return;
+      }
+
+      if (id) {
+        // Modo Edición
+        const idx = catalog.findIndex(x => x.id === id);
+        if (idx !== -1) {
+          catalog[idx] = { ...catalog[idx], type, title, year, poster, synopsis, trailer, download };
+          alert(`✅ "${title}" ha sido actualizada con éxito.`);
+        }
+      } else {
+        // Modo Creación (Nuevo)
+        const newItem = {
+          id: "item_" + Date.now(),
+          type,
+          title,
+          year,
+          poster,
+          synopsis,
+          trailer,
+          download
+        };
+        catalog.unshift(newItem);
+        alert(`🎉 ¡"${title}" ha sido agregada con éxito!`);
+      }
+
+      saveCatalog(catalog);
+      renderGrids();
+      cancelEditing();
+      switchAdminTab("list");
+    }
+
+    function editItem(id) {
+      const item = catalog.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById("formItemId").value = item.id;
+      document.getElementById("formType").value = item.type;
+      document.getElementById("formTitle").value = item.title;
+      document.getElementById("formYear").value = item.year;
+      document.getElementById("formPoster").value = item.poster;
+      document.getElementById("formSynopsis").value = item.synopsis || "";
+      document.getElementById("formTrailer").value = item.trailer || "";
+      document.getElementById("formDownload").value = item.download || "";
+
+      document.getElementById("btnSubmitForm").textContent = "Guardar Cambios";
+      document.getElementById("btnCancelEdit").style.display = "inline-block";
+
+      updatePosterPreview();
+      switchAdminTab("form");
+    }
+
+    function cancelEditing() {
+      document.getElementById("itemForm").reset();
+      document.getElementById("formItemId").value = "";
+      document.getElementById("formDownload").value = "";
+      document.getElementById("btnSubmitForm").textContent = "Guardar en el Catálogo";
+      document.getElementById("btnCancelEdit").style.display = "none";
+      updatePosterPreview();
+    }
+
+    function deleteItem(id) {
+      const item = catalog.find(x => x.id === id);
+      if (!item) return;
+      if (confirm(`¿Estás seguro de que deseas eliminar "${item.title}"?`)) {
+        catalog = catalog.filter(x => x.id !== id);
+        saveCatalog(catalog);
+        renderGrids();
+        renderAdminTable();
+      }
+    }
+
+    function renderAdminTable(filterQuery = "") {
+      const tbody = document.getElementById("adminTableBody");
+      const q = filterQuery.toLowerCase().trim();
+      const filtered = q
+        ? catalog.filter(x => x.title.toLowerCase().includes(q) || x.year.toLowerCase().includes(q))
+        : catalog;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px; color:#888;">No se encontraron elementos.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => `
+        <tr>
+          <td><img src="${encodeURI(item.poster)}" alt="" class="table-thumb" onerror="this.src=''"></td>
+          <td><strong>${escapeHtml(item.title)}</strong></td>
+          <td><span class="card-type-tag">${item.type === "movie" ? "Película" : "Serie"}</span></td>
+          <td>${escapeHtml(item.year)}</td>
+          <td>${item.download ? '<span style="color:#10b981; font-weight:700;">✓ Sí</span>' : '<span style="color:#888;">—</span>'}</td>
+          <td style="text-align:right">
+            <button class="btn-action edit" onclick="editItem('${item.id}')">✏️ Editar</button>
+            <button class="btn-action del" onclick="deleteItem('${item.id}')">🗑️ Borrar</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function filterAdminTable() {
+      const q = document.getElementById("adminTableSearch").value;
+      renderAdminTable(q);
+    }
+
+    /* ============================================================
+       EXPORTACIÓN Y DESCARGA PARA NETLIFY
+       ============================================================ */
+    function downloadUpdatedHTML() {
+      // Obtenemos el código fuente HTML actual completo
+      let fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+      // Inyectamos el catálogo actual como DEFAULT_CATALOG permanente
+      const catalogJsonString = JSON.stringify(catalog, null, 6);
+      const catalogRegex = /const DEFAULT_CATALOG = \[[\s\S]*?\];/;
+      const catalogReplacement = `const DEFAULT_CATALOG = ${catalogJsonString};`;
+
+      if (catalogRegex.test(fullHtml)) {
+        fullHtml = fullHtml.replace(catalogRegex, catalogReplacement);
+      }
+
+      // Inyectamos la contraseña actual como DEFAULT_ADMIN_PASS
+      const passRegex = /let DEFAULT_ADMIN_PASS = ".*?";/;
+      const currentPassword = getAdminPassword();
+      const passReplacement = `let DEFAULT_ADMIN_PASS = "${currentPassword.replace(/"/g, '\\"')}";`;
+
+      if (passRegex.test(fullHtml)) {
+        fullHtml = fullHtml.replace(passRegex, passReplacement);
+      }
+
+      const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      alert("✅ ¡Se ha descargado 'index.html'! Súbelo a tu panel de Netlify para que tus películas, series y contraseña queden configuradas de forma permanente.");
+    }
+
+    function exportDataJSON() {
+      const blob = new Blob([JSON.stringify(catalog, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "detodopeliculas-catalogo.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            catalog = imported;
+            saveCatalog(catalog);
+            renderGrids();
+            renderAdminTable();
+            alert("✅ ¡Catálogo importado correctamente!");
+          } else {
+            alert("❌ El formato del archivo JSON no es válido.");
+          }
+        } catch (err) {
+          alert("❌ Error al leer el archivo JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function resetToFactoryDefaults() {
+      if (confirm("⚠️ ¿Estás seguro de que deseas restablecer el catálogo de fábrica? Esto sobrescribirá los cambios locales.")) {
+        localStorage.removeItem(STORAGE_KEY);
+        catalog = [...DEFAULT_CATALOG];
+        saveCatalog(catalog);
+        renderGrids();
+        renderAdminTable();
+        alert("✅ Catálogo restablecido a los valores predeterminados.");
+      }
+    }
+
+    /* ============================================================
+       MENÚ MÓVIL Y EVENTOS TECLADO
+       ============================================================ */
+    function toggleNav() {
+      document.getElementById("navlinks").classList.toggle("open");
+    }
+    function closeNav() {
+      document.getElementById("navlinks").classList.remove("open");
+    }
+
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        closeDetailModal();
+        closeAuthModal();
+        closeAdminModal();
+      }
+    });
+
+    /* ============================================================
+       PWA Y SERVICE WORKER (APP MÓVIL ANDROID/IOS)
+       ============================================================ */
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('btnInstallApp');
+      if (btn) btn.style.display = 'inline-flex';
+    });
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            const btn = document.getElementById('btnInstallApp');
+            if (btn) btn.style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        alert('Para instalar en Android: pulsa el menú de opciones (tres puntos) de Chrome y selecciona "Añadir a pantalla de inicio" o "Instalar aplicación".');
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('PWA Service Worker activo'))
+          .catch(err => console.log('SW Error:', err));
+      });
+    }
+
+    // Inicializar renderizado
+    renderGrids();
+  </script>
+</body>
+</html>
+
