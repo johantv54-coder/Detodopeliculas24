@@ -862,7 +862,7 @@
 
   <!-- NAVEGACIÓN -->
   <header class="nav">
-    <a class="logo" href="#inicio">🎬 Detodo<span>peliculas</span></a>
+    <a class="logo" href="#inicio" onclick="handleLogoSecretClick(event)" title="Detodopeliculas">🎬 Detodo<span>peliculas</span></a>
     <div class="nav-actions">
       <nav class="navlinks" id="navlinks">
         <a href="#inicio" onclick="closeNav()">Inicio</a>
@@ -873,9 +873,7 @@
       <button id="btnInstallApp" class="btn-admin-nav" style="display:none; background:#10b981; border-color:#10b981;" onclick="installPWA()">
         📲 Instalar App
       </button>
-      <button class="btn-admin-nav" onclick="openAdminModal()">
-        🔐 Administrar
-      </button>
+      <button id="btnAdminNav" class="btn-admin-nav" style="display:none; background:#e50914; border-color:#e50914;" onclick="openAdminModal()">âš™ï¸ Administrar (Activo)</button>
       <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" onclick="toggleNav()">☰</button>
     </div>
   </header>
@@ -934,7 +932,7 @@
     <a href="#peliculas" class="b-item"><span class="b-icon">🎬</span><span>Películas</span></a>
     <a href="#series" class="b-item"><span class="b-icon">📺</span><span>Series</span></a>
     <a href="#searchInput" class="b-item" onclick="setTimeout(()=>document.getElementById('searchInput').focus(),100)"><span class="b-icon">🔍</span><span>Buscar</span></a>
-    <button class="b-item" onclick="openAdminModal()"><span class="b-icon">🔐</span><span>Admin</span></button>
+    <button class="b-item" id="bottomNavAdmin" style="display:none;" onclick="openAdminModal()"><span class="b-icon">âš™ï¸</span><span>Admin</span></button>
   </nav>
 
   <!-- PIE DE PÁGINA -->
@@ -1196,6 +1194,58 @@
       input.type = input.type === "password" ? "text" : "password";
     }
 
+
+    /* ============================================================
+       ACCESO SECRETO EXCLUSIVO PARA ADMINISTRADOR
+       ============================================================ */
+    let logoClicks = 0;
+    let logoTimer = null;
+    function handleLogoSecretClick(e) {
+      logoClicks++;
+      clearTimeout(logoTimer);
+      logoTimer = setTimeout(() => {
+        logoClicks = 0;
+      }, 900);
+
+      if (logoClicks >= 3) {
+        logoClicks = 0;
+        e.preventDefault();
+        openAdminModal();
+        showToast("ðŸ” Modo administrador activado", "info", 3000);
+      }
+    }
+
+    function checkSecretAdminAccess() {
+      const hash = (window.location.hash || "").toLowerCase();
+      const search = (window.location.search || "").toLowerCase();
+
+      if (hash === "#admin" || hash === "#administrar" || search.includes("admin")) {
+        setTimeout(() => {
+          openAdminModal();
+          showToast("ðŸ” Modo administrador activado", "info", 3000);
+        }, 300);
+      }
+    }
+
+    window.addEventListener("hashchange", checkSecretAdminAccess);
+    window.addEventListener("load", checkSecretAdminAccess);
+
+    window.addEventListener("keydown", e => {
+      // Atajo secreto en PC: Ctrl + Alt + A
+      if (e.ctrlKey && e.altKey && (e.key === "a" || e.key === "A")) {
+        e.preventDefault();
+        openAdminModal();
+        showToast("ðŸ” Modo administrador activado", "info", 3000);
+      }
+    });
+
+    function updateAdminButtonsVisibility(show) {
+      const navBtn = document.getElementById("btnAdminNav");
+      const btmBtn = document.getElementById("bottomNavAdmin");
+      if (navBtn) navBtn.style.display = show ? "inline-flex" : "none";
+      if (btmBtn) btmBtn.style.display = show ? "flex" : "none";
+    }
+
     function openAdminModal() {
       if (isAdminAuthenticated) {
         document.getElementById("adminModal").classList.add("active");
@@ -1240,7 +1290,11 @@
     function logoutAdmin() {
       isAdminAuthenticated = false;
       closeAdminModal();
-      alert("🔒 Sesión de administrador cerrada.");
+      updateAdminButtonsVisibility(false);
+      if (window.location.hash === "#admin" || window.location.hash === "#administrar") {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+      showToast("ðŸ”’ SesiÃ³n de administrador cerrada.", "info", 3000);
     }
 
     function changeAdminPasswordPrompt() {
