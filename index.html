@@ -804,7 +804,59 @@
       .banner { flex-direction: column; text-align: center; }
       h1 { letter-spacing: -1px; }
     }
+
+    /* ESTILOS DE TOAST Y SINCRONIZACIÓN GITHUB */
+    .admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e2233;
+      color: #f8fafc;
+      padding: 14px 22px;
+      border-radius: 12px;
+      border: 1px solid #3b4261;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      z-index: 999999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      max-width: 90vw;
+    }
+    .admin-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .admin-toast.success { border-color: #22c55e; background: #064e3b; }
+    .admin-toast.error { border-color: #ef4444; background: #7f1d1d; }
+    .admin-toast.info { border-color: #38bdf8; background: #0c4a6e; }
+
+    .gh-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .gh-status-badge.connected {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .gh-status-badge.disconnected {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
   </style>
+
 </head>
 <body>
 
@@ -955,7 +1007,7 @@
       <div class="admin-tabs">
         <button class="tab-btn active" id="tabBtnForm" onclick="switchAdminTab('form')">➕ Subir / Editar</button>
         <button class="tab-btn" id="tabBtnList" onclick="switchAdminTab('list')">📋 Administrar Catálogo</button>
-        <button class="tab-btn" id="tabBtnExport" onclick="switchAdminTab('export')">💾 Guardar para Netlify</button>
+        <button class="tab-btn" id="tabBtnExport" onclick="switchAdminTab('export')">âš™ï¸ SincronizaciÃ³n GitHub & Seguridad</button>
       </div>
       <div class="admin-body">
         <!-- TAB 1: FORMULARIO -->
@@ -1029,31 +1081,66 @@
         </div>
 
         <!-- TAB 3: EXPORTAR Y SEGURIDAD -->
+                <!-- TAB 3: SINCRONIZACIÓN GITHUB Y SEGURIDAD -->
         <div class="tab-content" id="tabExport">
-          <div class="export-card">
-            <div>
-              <h4 style="color: #4ade80;">🚀 Publicar cambios en Netlify</h4>
-              <p>Descarga el archivo <strong>index.html</strong> que ya incluye todas tus películas, series, enlaces de descarga y tu contraseña de administrador guardados en el código. Al subirlo a tu Netlify, los cambios quedarán permanentes.</p>
+          <!-- TARJETA PRINCIPAL: SINCRONIZACIÓN GITHUB EN VIVO -->
+          <div class="export-card" style="border-color: rgba(34, 197, 94, 0.4); background: rgba(34, 197, 94, 0.04); flex-direction: column; align-items: stretch;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+              <h4 style="color: #4ade80; margin: 0; display: flex; align-items: center; gap: 8px;">
+                🚀 Sincronización en Vivo con GitHub
+              </h4>
+              <span id="ghStatusBadge" class="gh-status-badge disconnected">● Token no configurado</span>
             </div>
-            <button class="btn primary" onclick="downloadUpdatedHTML()">⬇️ Descargar index.html</button>
+            <p style="color: #cbd5e1; font-size: 13px; line-height: 1.5; margin: 0 0 16px;">
+              Conecta tu <strong>Token de GitHub (PAT)</strong> para que cada película o serie que agregues, edites o elimines se guarde <strong>automáticamente en tu repositorio</strong> y se actualice al instante para todos los visitantes en <strong>https://johantv54-coder.github.io/Detodopeliculas24/</strong>.
+            </p>
+
+            <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+              <label for="ghTokenInput" style="font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px; font-weight: 500;">
+                Tu Token Personal de GitHub (PAT):
+              </label>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <input type="password" id="ghTokenInput" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="flex: 1; min-width: 200px; font-family: monospace; font-size: 13px;">
+                <button type="button" class="btn secondary" onclick="togglePassVisibility('ghTokenInput')" title="Mostrar u ocultar token" style="padding: 8px 12px;">👁️</button>
+                <button type="button" class="btn primary" onclick="saveGitHubTokenFromUI()" style="background: #2563eb; border-color: #2563eb; white-space: nowrap;">💾 Guardar Token</button>
+              </div>
+              <div style="margin-top: 8px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; font-size: 11px;">
+                <span style="color: #64748b;">🔒 El token se almacena únicamente en tu navegador de forma segura.</span>
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=DetodopeliculasAdmin" target="_blank" rel="noopener" style="color: #38bdf8; text-decoration: underline; font-weight: 500;">
+                  👉 Crear token en GitHub (marcar permiso 'repo')
+                </a>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px;">
+              <button class="btn primary" id="btnSyncNow" onclick="manualSyncToGitHub()" style="background: #10b981; border-color: #10b981;">
+                🚀 Sincronizar Catálogo Completo a GitHub Ahora
+              </button>
+              <button class="btn secondary" onclick="testGitHubConnection()">
+                🔍 Probar Conexión
+              </button>
+            </div>
           </div>
 
+          <!-- CAMBIAR CONTRASEÑA DE ADMINISTRADOR -->
           <div class="export-card">
             <div>
-              <h4>🔑 Cambiar Contraseña de Administrador</h4>
-              <p>Modifica la clave de acceso requerida para subir y editar contenido en este panel.</p>
+              <h4>🔐 Contraseña del Panel de Administrador</h4>
+              <p>Modifica la clave de acceso requerida para entrar a este panel y gestionar películas.</p>
             </div>
             <button class="btn secondary" onclick="changeAdminPasswordPrompt()">Cambiar Contraseña</button>
           </div>
 
+          <!-- RESPALDO JSON -->
           <div class="export-card">
             <div>
               <h4>📦 Respaldar catálogo (JSON)</h4>
-              <p>Guarda una copia de seguridad en formato JSON de todas las películas y series actuales con sus enlaces de descarga.</p>
+              <p>Guarda una copia de seguridad en tu computadora de todas las películas y series actuales con sus enlaces.</p>
             </div>
             <button class="btn secondary" onclick="exportDataJSON()">Exportar JSON</button>
           </div>
 
+          <!-- IMPORTAR JSON -->
           <div class="export-card">
             <div>
               <h4>📥 Restaurar o importar catálogo</h4>
@@ -1065,6 +1152,7 @@
             </div>
           </div>
 
+          <!-- RESTABLECER DE FÁBRICA -->
           <div class="export-card" style="border-color: rgba(229, 9, 20, 0.4);">
             <div>
               <h4 style="color: #f87171;">⚠️ Restaurar catálogo de fábrica</h4>
@@ -1075,6 +1163,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICACIONES -->
+  <div id="adminToast" class="admin-toast">
+    <span id="adminToastIcon">🔔</span>
+    <span id="adminToastMsg">Notificación</span>
+  </div>
+
   </div>
 
   <!-- SCRIPT CON DATOS Y LÓGICA -->
@@ -1104,6 +1200,7 @@
       if (isAdminAuthenticated) {
         document.getElementById("adminModal").classList.add("active");
         renderAdminTable();
+        updateGitHubStatusUI();
       } else {
         openAuthModal();
       }
@@ -1656,6 +1753,7 @@
       } else if (tabName === "export") {
         document.getElementById("tabBtnExport").classList.add("active");
         document.getElementById("tabExport").classList.add("active");
+        updateGitHubStatusUI();
       }
     }
 
@@ -1720,6 +1818,12 @@
       renderGrids();
       cancelEditing();
       switchAdminTab("list");
+
+      if (getGitHubToken()) {
+        syncCatalogToGitHub(catalog, true);
+      } else {
+        alert(`âœ… "${title}" guardada en este navegador.\n\nâš ï¸ Para que se actualice en vivo en tu web para todos los visitantes, ve a la pestaÃ±a 'âš™ï¸ SincronizaciÃ³n GitHub' y guarda tu Token de GitHub.`);
+      }
     }
 
     function editItem(id) {
@@ -1759,6 +1863,9 @@
         saveCatalog(catalog);
         renderGrids();
         renderAdminTable();
+        if (getGitHubToken()) {
+          syncCatalogToGitHub(catalog, true);
+        }
       }
     }
 
@@ -1882,6 +1989,225 @@
     /* ============================================================
        MENÚ MÓVIL Y EVENTOS TECLADO
        ============================================================ */
+
+    /* ============================================================
+       SINCRONIZACIÓN EN VIVO CON GITHUB API (ADMIN EXCLUSIVO)
+       ============================================================ */
+    const GH_TOKEN_KEY = "detodopeliculas_github_token";
+    const GH_REPO_OWNER = "johantv54-coder";
+    const GH_REPO_NAME = "Detodopeliculas24";
+    const GH_CATALOG_FILE = "catalogo.json";
+
+    function showToast(message, type = "info", duration = 4500) {
+      const toast = document.getElementById("adminToast");
+      const msgEl = document.getElementById("adminToastMsg");
+      const iconEl = document.getElementById("adminToastIcon");
+      if (!toast) return;
+
+      toast.className = `admin-toast show ${type}`;
+      if (msgEl) msgEl.textContent = message;
+      if (iconEl) {
+        if (type === "success") iconEl.textContent = "✅";
+        else if (type === "error") iconEl.textContent = "❌";
+        else iconEl.textContent = "⏳";
+      }
+
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(() => {
+        toast.className = "admin-toast";
+      }, duration);
+    }
+
+    function getGitHubToken() {
+      return localStorage.getItem(GH_TOKEN_KEY) || "";
+    }
+
+    function setGitHubToken(token) {
+      if (token) {
+        localStorage.setItem(GH_TOKEN_KEY, token.trim());
+      } else {
+        localStorage.removeItem(GH_TOKEN_KEY);
+      }
+      updateGitHubStatusUI();
+    }
+
+    function saveGitHubTokenFromUI() {
+      const input = document.getElementById("ghTokenInput");
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) {
+        if (confirm("¿Deseas desconectar o borrar el token de GitHub guardado?")) {
+          setGitHubToken("");
+          showToast("Token eliminado.", "info");
+        }
+        return;
+      }
+      setGitHubToken(val);
+      showToast("Token de GitHub guardado con éxito.", "success");
+      testGitHubConnection();
+    }
+
+    function updateGitHubStatusUI() {
+      const badge = document.getElementById("ghStatusBadge");
+      const input = document.getElementById("ghTokenInput");
+      const token = getGitHubToken();
+
+      if (input && !input.value && token) {
+        input.value = token;
+      }
+
+      if (badge) {
+        if (token) {
+          badge.className = "gh-status-badge connected";
+          badge.textContent = `● Conectado a ${GH_REPO_NAME}`;
+        } else {
+          badge.className = "gh-status-badge disconnected";
+          badge.textContent = "● Token no configurado";
+        }
+      }
+    }
+
+    async function testGitHubConnection() {
+      const token = getGitHubToken();
+      if (!token) {
+        showToast("Primero ingresa tu Token de GitHub.", "error");
+        return;
+      }
+      showToast("Comprobando conexión con GitHub...", "info");
+      try {
+        const res = await fetch(`https://api.github.com/repos/${GH_REPO_OWNER}/${GH_REPO_NAME}`, {
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+        if (res.ok) {
+          showToast("¡Conexión exitosa! Tienes permisos de administrador.", "success");
+          updateGitHubStatusUI();
+        } else {
+          const err = await res.json();
+          showToast("Error de conexión: " + (err.message || "Token inválido"), "error");
+        }
+      } catch (e) {
+        showToast("Error al conectar: " + e.message, "error");
+      }
+    }
+
+    function utf8ToBase64(str) {
+      const bytes = new TextEncoder().encode(str);
+      let bin = "";
+      for (let i = 0; i < bytes.byteLength; i++) {
+        bin += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(bin);
+    }
+
+    async function syncCatalogToGitHub(catalogToSync = null, showToastSuccess = true) {
+      const token = getGitHubToken();
+      if (!token) return false;
+
+      const items = catalogToSync || catalog;
+      showToast("⏳ Publicando cambios en GitHub en vivo...", "info");
+
+      try {
+        const fileUrl = `https://api.github.com/repos/${GH_REPO_OWNER}/${GH_REPO_NAME}/contents/${GH_CATALOG_FILE}`;
+        
+        // 1. Obtener SHA actual del archivo remoto en GitHub
+        const getRes = await fetch(fileUrl + "?t=" + Date.now(), {
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+
+        let sha = null;
+        if (getRes.ok) {
+          const fileData = await getRes.json();
+          sha = fileData.sha;
+        }
+
+        // 2. Codificar JSON en Base64 UTF-8 y enviar commit vía PUT
+        const jsonString = JSON.stringify(items, null, 2);
+        const contentBase64 = utf8ToBase64(jsonString);
+
+        const bodyData = {
+          message: `Actualización de catálogo: ${items.length} títulos (Admin Panel)`,
+          content: contentBase64,
+          branch: "main"
+        };
+        if (sha) bodyData.sha = sha;
+
+        const putRes = await fetch(fileUrl, {
+          method: "PUT",
+          headers: {
+            "Authorization": `token ${token}`,
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bodyData)
+        });
+
+        if (putRes.ok) {
+          if (showToastSuccess) {
+            showToast("✅ ¡Publicado en vivo! Tus cambios ya están en GitHub.", "success", 5000);
+          }
+          return true;
+        } else {
+          const errData = await putRes.json();
+          throw new Error(errData.message || "Error al actualizar en GitHub");
+        }
+      } catch (err) {
+        console.error("Error sincronizando con GitHub:", err);
+        showToast("⚠️ Error al publicar en GitHub: " + err.message, "error", 6000);
+        return false;
+      }
+    }
+
+    async function manualSyncToGitHub() {
+      const token = getGitHubToken();
+      if (!token) {
+        alert("Por favor ingresa y guarda tu Token de GitHub primero.");
+        return;
+      }
+      const btn = document.getElementById("btnSyncNow");
+      const originalText = btn ? btn.textContent : "";
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Publicando en GitHub...";
+      }
+      try {
+        const ok = await syncCatalogToGitHub(catalog, true);
+        if (ok) {
+          alert("🎉 ¡Catálogo sincronizado con éxito!\n\nTus películas ya están publicadas en GitHub y se verán inmediatamente para todos los visitantes.");
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      }
+    }
+
+    async function loadLiveCatalog() {
+      try {
+        const res = await fetch("catalogo.json?t=" + Date.now());
+        if (res.ok) {
+          const remoteData = await res.json();
+          if (Array.isArray(remoteData) && remoteData.length > 0) {
+            catalog = remoteData;
+            saveCatalog(catalog);
+            renderGrids();
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Fallo carga remota de catalogo.json, usando respaldo local:", e);
+      }
+      catalog = loadCatalog();
+      renderGrids();
+    }
+
+
     function toggleNav() {
       document.getElementById("navlinks").classList.toggle("open");
     }
@@ -1931,8 +2257,9 @@
       });
     }
 
-    // Inicializar renderizado
-    renderGrids();
+    // Inicializar carga en vivo y renderizado
+    loadLiveCatalog();
+    updateGitHubStatusUI();
   </script>
 </body>
 </html>
