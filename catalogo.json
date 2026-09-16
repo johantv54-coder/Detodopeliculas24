@@ -1,5 +1,15 @@
 [
   {
+    "id": "item_1789566566309",
+    "type": "movie",
+    "title": "Night of the Living Dead",
+    "year": "2026",
+    "poster": "https://www.sbs.is/wp-content/uploads/elementor/thumbs/hnPIxEnQBWyHwT5mVGwdAd4TYrj-scaled-rqigrl9t4luk8of1az8w0dcqm3cqbtlwgymdu211ki.webp",
+    "synopsis": "Remake de la película de terror de culto “La noche de los muertos vivientes” de George A. Romero de 1968. Tiene lugar durante un acontecimiento mundial en el que los muertos se alzan y vagan por la tierra como zombis. A medida que la civilización se derrumba, un pequeño grupo de supervivientes debe luchar para mantenerse con vida contra la creciente amenaza de los muertos vivientes.",
+    "trailer": "https://www.youtube.com/watch?v=NvO_ieVQZ4E",
+    "download": "https://terabox.com/s/1R8FZ8Azf6_M4RhtHlWCUBA"
+  },
+  {
     "id": "item_1789566387053",
     "type": "movie",
     "title": "La noche del demonio Están entre nosotros",
