@@ -1,5 +1,15 @@
 [
   {
+    "id": "item_1792173147896",
+    "type": "movie",
+    "title": "loco méxico mágico",
+    "year": "2026",
+    "poster": "https://image.tmdb.org/t/p/original/wCUD4k1EYhFwuTpsUwKfY3fvWOT.jpg",
+    "synopsis": "Sinopsis\n\nLa historia se desarrolla en Alvarado, Veracruz. Benito (interpretado por Silverio Palacios), el excéntrico presidente municipal, busca impulsar su carrera política hacia la gubernatura y, de paso, evitar que su hijo se mude a la Ciudad de México para ser actor. Para lograrlo, decide que el pueblo debe filmar una superproducción estilo Hollywood.\nPara esta ambiciosa misión, recluta a un equipo completamente improvisado y sin experiencia, liderado por Juan (interpretado por Daniel Sosa), un camarógrafo local que suele grabar XV años y bodas. Junto a una famosa estrella pop y actriz llamada Melinda, el pueblo entero se involucra en el caótico rodaje (desde la vestuarista de quinceañeras hasta expertos en efectos especiales empíricos)",
+    "trailer": "https://www.youtube.com/watch?v=WK8UFpng4IU",
+    "download": ""
+  },
+  {
     "id": "item_1791553872215",
     "type": "movie",
     "title": "Gary",
